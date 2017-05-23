@@ -20,7 +20,7 @@ import sys
 
 # path = get_file('nietzsche.txt', origin='https://s3.amazonaws.com/text-datasets/nietzsche.txt')
 # path = './textdatasets/tinyshakesepare.txt'
-path = './textdatasets/lotr1.txt'
+path = './textdatasets/lotr_combined.txt'
 text = open(path).read().lower()
 
 print('corpus length:', len(text))
@@ -55,10 +55,11 @@ model = Sequential()
 model.add(LSTM(128, input_shape=(maxlen, len(chars))))
 #model.add(LSTM(64))
 #model.add(LSTM(128))
+model.add(Dropout(0.2))
 model.add(Dense(len(chars)))
 model.add(Activation('softmax'))
 
-optimizer = RMSprop(lr=0.01)
+optimizer = RMSprop(lr=0.001)
 model.compile(loss='categorical_crossentropy', optimizer=optimizer)
 
 
@@ -71,6 +72,8 @@ def sample(preds, temperature=1.0):
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
+tensorboard = TensorBoard(log_dir='./tb_logs', histogram_freq=0, write_graph=True, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)
+
 # train the model, output generated text after each iteration
 for iteration in range(1, 60):
     print()
@@ -78,7 +81,8 @@ for iteration in range(1, 60):
     print('Iteration', iteration)
     model.fit(X, y,
               batch_size=128,
-              epochs=1)
+              epochs=1,
+              callbacks=[tensorboard])
 
     model.save('lotr-iter-' + str(iteration) + '.h5')
 
@@ -109,5 +113,3 @@ for iteration in range(1, 60):
             sys.stdout.write(next_char)
             sys.stdout.flush()
         print()
-
-model.save('lstm-sample-nietzsche.h5')
