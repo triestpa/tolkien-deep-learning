@@ -88,7 +88,7 @@ for iteration in range(1, 60):
 
     start_index = random.randint(0, len(text) - maxlen - 1)
 
-    for diversity in [0.2, 0.5, 1.0, 1.2]:
+    for diversity in [0.4, 0.8, 1.2]:
         print()
         print('----- diversity:', diversity)
 
@@ -98,7 +98,7 @@ for iteration in range(1, 60):
         print('----- Generating with seed: "' + sentence + '"')
         sys.stdout.write(generated)
 
-        for i in range(50):
+        for i in range(100):
             x = np.zeros((1, maxlen, len(chars)))
             for t, char in enumerate(sentence):
                 x[0, t, char_indices[char]] = 1.
