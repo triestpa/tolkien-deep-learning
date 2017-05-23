@@ -18,10 +18,13 @@ import random
 import sys
 
 
-path = get_file('nietzsche.txt', origin='https://s3.amazonaws.com/text-datasets/nietzsche.txt')
+#path = get_file('nietzsche.txt', origin='https://s3.amazonaws.com/text-datasets/nietzsche.txt')
 # path = './textdatasets/tinyshakesepare.txt'
-# path = './textdatasets/lotr1.txt'
+path = './textdatasets/lotr1.txt'
 text = open(path).read().lower()
+
+text = text[5000:8000]
+
 
 print('corpus length:', len(text))
 
@@ -80,8 +83,6 @@ for iteration in range(1, 60):
               batch_size=128,
               epochs=1)
 
-    model.save('lotr-iter-' + str(iteration) + '.h5')
-
     start_index = random.randint(0, len(text) - maxlen - 1)
 
     for diversity in [0.2, 0.5, 1.0, 1.2]:
@@ -94,7 +95,7 @@ for iteration in range(1, 60):
         print('----- Generating with seed: "' + sentence + '"')
         sys.stdout.write(generated)
 
-        for i in range(400):
+        for i in range(50):
             x = np.zeros((1, maxlen, len(chars)))
             for t, char in enumerate(sentence):
                 x[0, t, char_indices[char]] = 1.
@@ -109,5 +110,3 @@ for iteration in range(1, 60):
             sys.stdout.write(next_char)
             sys.stdout.flush()
         print()
-
-model.save('lstm-sample-nietzsche.h5')
