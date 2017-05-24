@@ -17,8 +17,9 @@ import numpy as np
 import random
 import sys
 
-path = get_file('nietzsche.txt', origin='https://s3.amazonaws.com/text-datasets/nietzsche.txt')
+# path = get_file('nietzsche.txt', origin='https://s3.amazonaws.com/text-datasets/nietzsche.txt')
 # path = './textdatasets/tinyshakesepare.txt'
+path = './textdatasets/lotr_combined.txt'
 text = open(path).read().lower()
 
 print('corpus length:', len(text))
@@ -49,7 +50,7 @@ for i, sentence in enumerate(sentences):
 
 # build the model: a single LSTM
 print('Load model...')
-model = load_model('lotr-model-1.h5')
+model = load_model('lotr-iter-30.h5')
 
 
 def sample(preds, temperature=1.0):
@@ -69,17 +70,16 @@ for iteration in range(1, 60):
 
     start_index = random.randint(0, len(text) - maxlen - 1)
 
-    for diversity in [0.2, 0.4, 0.6, 0.8, 1.0, 1.2]:
+    for diversity in [0.8]:
         print()
         print('----- diversity:', diversity)
 
         generated = ''
         sentence = text[start_index: start_index + maxlen]
         generated += sentence
-        print('----- Generating with seed: "' + sentence + '"')
         sys.stdout.write(generated)
 
-        for i in range(1000):
+        for i in range(3000):
             x = np.zeros((1, maxlen, len(chars)))
             for t, char in enumerate(sentence):
                 x[0, t, char_indices[char]] = 1.
@@ -88,10 +88,10 @@ for iteration in range(1, 60):
             next_index = sample(preds, diversity)
             next_char = indices_char[next_index]
 
-            generated += next_char
-            sentence = sentence[1:] + next_char
-
-            sys.stdout.write(next_char)
-            sys.stdout.flush()
+            if (next_char != '\n'):
+                generated += next_char
+                sentence = sentence[1:] + next_char
+                sys.stdout.write(next_char)
+                sys.stdout.flush()
         print()
 
