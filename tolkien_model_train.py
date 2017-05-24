@@ -8,7 +8,7 @@ has at least ~100k characters. ~1M is better.
 '''
 
 from __future__ import print_function
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense, Activation, Dropout, LSTM
 from keras.optimizers import RMSprop
 from keras.utils.data_utils import get_file
@@ -50,7 +50,7 @@ for i, sentence in enumerate(sentences):
 
 # build the model: a single LSTM
 print('Load model...')
-model = load_model('lstm-sample-nietzsche.h5')
+model = load_model('lotr-iter-11.h5')
 
 def sample(preds, temperature=1.0):
     # helper function to sample an index from a probability array
@@ -64,7 +64,7 @@ def sample(preds, temperature=1.0):
 tensorboard = TensorBoard(log_dir='./tb_logs', histogram_freq=0, write_graph=True, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)
 
 # train the model, output generated text after each iteration
-for iteration in range(1, 60):
+for iteration in range(12, 60):
     print()
     print('-' * 50)
     print('Iteration', iteration)
