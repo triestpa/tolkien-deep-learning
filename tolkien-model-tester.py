@@ -49,7 +49,7 @@ for i, sentence in enumerate(sentences):
 
 # build the model: a single LSTM
 print('Load model...')
-model = load_model('lstm-sample-nietzsche.h5')
+model = load_model('lotr-model-1.h5')
 
 
 def sample(preds, temperature=1.0):
