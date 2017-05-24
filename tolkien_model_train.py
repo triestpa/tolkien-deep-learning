@@ -84,7 +84,6 @@ for iteration in range(12, 60):
         generated = ''
         sentence = text[start_index: start_index + maxlen]
         generated += sentence
-        print('----- Generating with seed: "' + sentence + '"')
         sys.stdout.write(generated)
 
         for i in range(100):
